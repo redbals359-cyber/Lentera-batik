@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LenteraBatik - Batik Sekar Jagad Sidoarjo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #1a1615;
+      color: #2c1a0e;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    /* Dashboard dengan Background Gambar Kuning Baru */
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: #f7d050 url('https://raw.githubusercontent.com/redbals359-cyber/Lentera-batik/main/Screenshot_20261006-191104.jpg') center/cover no-repeat;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    /* Header dengan backdrop transparan agar teks terbaca jelas */
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+      background: rgba(255, 252, 245, 0.9);
+      padding: 10px 20px;
+      border-radius: 15px;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      border: 1px solid #d49b4b;
+    }
+    header h1 {
+      color: #613000;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 12px;
+      color: #6e4b21;
+      font-weight: 500;
+    }
+    .page {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .img-box {
+      width: 100%;
+      height: 220px;
+      background-color: #382e2b;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+      border: 2px solid #8c531b;
+    }
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .img-source {
+      font-size: 10px;
+      color: #4a3010;
+      margin-bottom: 12px;
+      align-self: flex-start;
+      font-style: italic;
+      background: rgba(255,255,255,0.7);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    /* Kotak Cerita Khas Batik */
+    .story-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #231408;
+      margin-bottom: 20px;
+      text-align: justify;
+      background: rgba(255, 252, 245, 0.92);
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 4px solid #8c531b;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Label & Panel Kontrol */
+    .controls-card {
+      background: rgba(255, 252, 245, 0.92);
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid #d49b4b;
+    }
+    .controls-label {
+      font-size: 11px;
+      color: #613000;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: bold;
+    }
+    .color-palette, .size-palette {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+    .color-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #8c531b;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .color-btn.active {
+      transform: scale(1.25);
+      border: 3px solid #1a1615;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    }
+    .size-btn {
+      background-color: #fff8eb;
+      color: #4a2b0f;
+      border: 1px solid #8c531b;
+      border-radius: 15px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .size-btn.active {
+      background-color: #8c531b;
+      color: #ffffff;
+      font-weight: bold;
+      border-color: #613000;
+    }
+
+    /* Area Canvas Paint */
+    .canvas-wrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 8px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid #613000;
+      background-color: #e8dfd1;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    #paintCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Tombol Aksi */
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .btn {
+      background-color: #613000;
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    .btn:hover {
+      background-color: #422000;
+    }
+    .btn-preview {
+      background-color: #2b5b84;
+      color: #ffffff;
+      flex: 1;
+    }
+    .btn-preview:hover {
+      background-color: #1a3d5c;
+    }
+    .btn-reset {
+      background-color: rgba(255, 252, 245, 0.9);
+      color: #613000;
+      border: 1px dashed #613000;
+      flex: 1;
+      font-weight: bold;
+    }
+    .btn-finish {
+      background-color: #206324;
+      color: #ffffff;
+      margin-top: 5px;
+      width: 100%;
+    }
+    .btn-finish:hover {
+      background-color: #134216;
+    }
+    .btn-secondary {
+      background-color: rgba(255, 252, 245, 0.9);
+      color: #4a2b0f;
+      border: 1px solid #8c531b;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    /* Modal Pop-up SVG Acuan Batik */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 99;
+      border-radius: 12px;
+    }
+    .modal-card {
+      background-color: #fff8eb;
+      border: 2px solid #613000;
+      border-radius: 12px;
+      padding: 15px;
+      width: 100%;
+      text-align: center;
+    }
+    .svg-preview-container {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .result-box {
+      margin-top: 12px;
+      padding: 12px;
+      background-color: rgba(255, 252, 245, 0.95);
+      border: 2px solid #613000;
+      border-radius: 10px;
+      width: 100%;
+      text-align: center;
+    }
+    .result-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .result-desc {
+      font-size: 12px;
+      color: #38210b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>LenteraBatik</h1>
+      <p>Kisah & Warisan Batik Sekar Jagad</p>
+    </header>
+
+    <!-- HALAMAN 1: STORYTELLING -->
+    <section id="page-story" class="page">
+      <div class="img-box">
+        <img src="https://raw.githubusercontent.com/redbals359-cyber/Lentera-batik/main/Screenshot_20261006-173951.jpg" alt="Batik Sekar Jagad">
+      </div>
+      <p class="img-source">Sumber Foto: Dokumentasi Digital LenteraBatik</p>
+
+      <div class="story-text">
+        <p><strong>Batik Sekar Jagad</strong> merupakan salah satu motif khas yang paling bergengsi dan sarat akan nilai estetika tinggi. Kata <i>"Sekar"</i> berarti bunga atau keindahan, sedangkan <i>"Jagad"</i> berarti dunia.</p>
+        <br>
+        <p>Motif ini menggambarkan keindahan dan keragaman budaya dunia yang disatukan dalam hamparan pola menyerupai pulau-pulau (kontur peta). Setiap lekukan bagiannya diisi oleh ornamen flora, fauna, dan variasi titik-titik klowongan yang melambangkan keharmonisan serta rasa syukur atas keberagaman alam.</p>
+      </div>
+      <button class="btn" id="btn-to-sim" style="width: 100%;">Coba Mencanting Digital &rarr;</button>
+    </section>
+
+    <!-- HALAMAN 2: SIMULASI MEMBATIK -->
+    <section id="page-sim" class="page hidden">
+      <!-- Pilihan Warna -->
+      <div class="controls-card">
+        <span class="controls-label">1. Pilih Warna Canting:</span>
+        <div class="color-palette">
+          <div class="color-btn active" style="background-color: #517fa4;" data-color="#517fa4" title="Biru Muda"></div>
+          <div class="color-btn" style="background-color: #182a42;" data-color="#182a42" title="Biru Tua"></div>
+          <div class="color-btn" style="background-color: #e8dfd1;" data-color="#e8dfd1" title="Krem / Bunga"></div>
+          <div class="color-btn" style="background-color: #8c6847;" data-color="#8c6847" title="Cokelat Emas"></div>
+          <div class="color-btn" style="background-color: #14171a;" data-color="#14171a" title="Hitam Malam"></div>
+        </div>
+      </div>
+
+      <!-- Pilihan Ukuran Canting -->
+      <div class="controls-card">
+        <span class="controls-label">2. Ukuran Goresan:</span>
+        <div class="size-palette">
+          <button class="size-btn" data-size="6">Kecil (Detail)</button>
+          <button class="size-btn active" data-size="14">Sedang (Rata)</button>
+          <button class="size-btn" data-size="26">Besar (Isi Blok)</button>
+        </div>
+      </div>
+
+      <!-- Canvas Area -->
+      <div class="canvas-wrapper">
+        <canvas id="paintCanvas" width="300" height="300"></canvas>
+      </div>
+
+      <!-- Tombol Aksi -->
+      <div class="btn-group">
+        <button class="btn btn-preview" id="btn-open-preview">👁️ Lihat Acuan Batik</button>
+        <button class="btn btn-reset" id="btn-reset">↺ Bersihkan</button>
+      </div>
+
+      <button class="btn btn-finish" id="btn-finish">Selesai Mencanting</button>
+
+      <div id="result-box" class="result-box hidden">
+        <div id="result-title" class="result-title"></div>
+        <div id="result-desc" class="result-desc"></div>
+      </div>
+
+      <button class="btn btn-secondary" id="btn-to-story">&larr; Kembali ke Cerita</button>
+    </section>
+
+    <!-- POP-UP MODAL ACUAN CANTINGAN (SVG VEKTOR) -->
+    <div id="modal-preview" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h3 style="color: #613000; font-size: 16px;">Acuan Hasil Cantingan Sekar Jagad</h3>
+        <p style="font-size: 11px; color: #553a1d; margin-top: 2px;">Simulasi hasil warnai blok mosaik pulau yang siap:</p>
+        
+        <!-- LUKISAN BATIK CANTINGAN VECTOR SVG -->
+        <div class="svg-preview-container">
+          <svg viewBox="0 0 300 300" style="width: 100%; height: auto; border-radius: 10px; border: 2px solid #613000; background-color: #e8dfd1;">
+            <!-- Background base kain -->
+            <rect width="300" height="300" fill="#e8dfd1"/>
+
+            <!-- 1. Pulau Biru Muda (Top Left) -->
+            <path d="M 0,0 L 110,0 C 80,40 60,90 0,100 Z" fill="#517fa4" stroke="#8c6847" stroke-width="3"/>
+            <g fill="#ffffff" opacity="0.6">
+              <circle cx="20" cy="20" r="2"/><circle cx="40" cy="30" r="2"/><circle cx="20" cy="50" r="2"/>
+              <circle cx="60" cy="20" r="2"/><circle cx="80" cy="15" r="2"/><circle cx="40" cy="70" r="2"/>
+            </g>
+
+            <!-- 2. Pulau Biru Muda (Top Right) -->
+            <path d="M 110,0 C 150,70 210,50 300,90 L 300,0 Z" fill="#517fa4" stroke="#8c6847" stroke-width="3"/>
+            <g fill="#ffffff" opacity="0.6">
+              <circle cx="180" cy="20" r="2"/><circle cx="220" cy="30" r="2"/><circle cx="260" cy="20" r="2"/>
+              <circle cx="200" cy="50" r="2"/><circle cx="250" cy="60" r="2"/>
+            </g>
+
+            <!-- 3. Pulau Biru Tua / Dongker (Center Mosaik) -->
+            <path d="M 0,100 C 60,90 80,40 110,0 C 150,70 210,50 300,90 C 180,150 140,240 70,230 C 120,180 80,120 0,100 Z" fill="#182a42" stroke="#8c6847" stroke-width="3"/>
+            <g fill="#e8dfd1">
+              <circle cx="120" cy="100" r="5"/><circle cx="180" cy="110" r="5"/><circle cx="150" cy="160" r="5"/>
+              <circle cx="80" cy="150" r="4"/><circle cx="220" cy="140" r="4"/>
+            </g>
+
+            <!-- 4. Pulau Krem Bunga Ceplok (Bawah Kiri) -->
+            <path d="M 0,100 C 80,120 120,180 70,230 C 120,270 150,260 180,300 L 0,300 Z" fill="#e8dfd1" stroke="#8c6847" stroke-width="3"/>
+            <g stroke="#8c6847" stroke-width="2" fill="none">
+              <circle cx="65" cy="245" r="12"/>
+              <circle cx="65" cy="245" r="4" fill="#8c6847"/>
+              <path d="M 65,225 L 65,265 M 45,245 L 85,245"/>
+            </g>
+
+            <!-- 5. Pulau Cokelat Lereng (Bawah Kanan) -->
+            <path d="M 70,230 C 140,240 180,150 300,90 L 300,300 L 180,300 C 150,260 120,270 70,230 Z" fill="#8c6847" stroke="#14171a" stroke-width="3"/>
+            <g stroke="#e8dfd1" stroke-width="2" stroke-dasharray="5,4">
+              <line x1="180" y1="180" x2="260" y2="280"/>
+              <line x1="210" y1="160" x2="290" y2="260"/>
+              <line x1="150" y1="210" x2="220" y2="295"/>
+            </g>
+
+            <!-- Label Teks -->
+            <text x="50" y="35" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">Biru Muda</text>
+            <text x="240" y="35" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">Biru Muda</text>
+            <text x="150" y="135" fill="#e0a96d" font-size="10" font-weight="bold" text-anchor="middle">Biru Tua</text>
+            <text x="65" y="215" fill="#8c6847" font-size="10" font-weight="bold" text-anchor="middle">Krem Bunga</text>
+            <text x="235" y="225" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">Cokelat Lereng</text>
+          </svg>
+        </div>
+
+        <button class="btn" id="btn-close-preview" style="width: 100%; margin-top: 5px;">Tutup & Lanjut Mencanting</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const pageStory = document.getElementById('page-story');
+    const pageSim = document.getElementById('page-sim');
+    const btnToSim = document.getElementById('btn-to-sim');
+    const btnToStory = document.getElementById('btn-to-story');
+    const btnFinish = document.getElementById('btn-finish');
+    const btnReset = document.getElementById('btn-reset');
+    
+    const modalPreview = document.getElementById('modal-preview');
+    const btnOpenPreview = document.getElementById('btn-open-preview');
+    const btnClosePreview = document.getElementById('btn-close-preview');
+
+    const resultBox = document.getElementById('result-box');
+    const resultTitle = document.getElementById('result-title');
+    const resultDesc = document.getElementById('result-desc');
+
+    btnToSim.addEventListener('click', () => {
+      pageStory.classList.add('hidden');
+      pageSim.classList.remove('hidden');
+      resultBox.classList.add('hidden');
+      initCanvas();
+    });
+
+    btnToStory.addEventListener('click', () => {
+      pageSim.classList.add('hidden');
+      pageStory.classList.remove('hidden');
+    });
+
+    // Modal
+    btnOpenPreview.addEventListener('click', () => modalPreview.classList.remove('hidden'));
+    btnClosePreview.addEventListener('click', () => modalPreview.classList.add('hidden'));
+
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let selectedColor = '#517fa4';
+    let selectedSize = 14;
+    let points = [];
+
+    // Switch Warna
+    const colorBtns = document.querySelectorAll('.color-btn');
+    colorBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        colorBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedColor = btn.getAttribute('data-color');
+      });
+    });
+
+    // Switch Ukuran Canting
+    const sizeBtns = document.querySelectorAll('.size-btn');
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSize = parseInt(btn.getAttribute('data-size'));
+      });
+    });
+
+    // Outlines
+    function drawOutline() {
+      ctx.strokeStyle = '#8c6847';
+      ctx.lineWidth = 2.5;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 100);
+      ctx.bezierCurveTo(60, 90, 80, 40, 110, 0);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(110, 0);
+      ctx.bezierCurveTo(150, 70, 210, 50, 300, 90);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, 100);
+      ctx.bezierCurveTo(80, 120, 120, 180, 70, 230);
+      ctx.bezierCurveTo(140, 240, 180, 150, 300, 90);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(70, 230);
+      ctx.bezierCurveTo(120, 270, 150, 260, 180, 300);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(180, 230);
+      ctx.bezierCurveTo(230, 210, 260, 270, 300, 260);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#8c531b';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 3]);
+
+      ctx.beginPath();
+      ctx.arc(60, 260, 12, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(210, 230); ctx.lineTo(260, 290);
+      ctx.moveTo(230, 220); ctx.lineTo(280, 280);
+      ctx.stroke();
+
+      ctx.setLineDash([]);
+
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+
+      ctx.fillStyle = '#1d5480';
+      ctx.fillText('🩵 Biru Muda', 50, 45);
+      ctx.fillText('🩵 Biru Muda', 240, 40);
+
+      ctx.fillStyle = '#0f1d30';
+      ctx.fillText('💙 Biru Tua', 150, 120);
+
+      ctx.fillStyle = '#5c4835';
+      ctx.fillText('🤍 Krem Bunga', 65, 270);
+
+      ctx.fillStyle = '#6e4a27';
+      ctx.fillText('🤎 Cokelat', 240, 250);
+    }
+
+    function initCanvas() {
+      ctx.fillStyle = '#e8dfd1';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawOutline();
+    }
+
+    btnReset.addEventListener('click', initCanvas);
+
+    function getCanvasCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    // Algoritma Mencanting Stabil
+    function startDrawing(e) {
+      if (e.cancelable) e.preventDefault();
+      isDrawing = true;
+      const coords = getCanvasCoords(e);
+      points = [coords];
+    }
+
+    function stopDrawing(e) {
+      if (e.cancelable) e.preventDefault();
+      isDrawing = false;
+      points = [];
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      if (e.cancelable) e.preventDefault();
+
+      const coords = getCanvasCoords(e);
+      points.push(coords);
+
+      if (points.length < 2) return;
+
+      ctx.strokeStyle = selectedColor;
+      ctx.lineWidth = selectedSize;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      const p1 = points[0];
+      ctx.moveTo(p1.x, p1.y);
+
+      for (let i = 1; i < points.length - 1; i++) {
+        const midX = (points[i].x + points[i + 1].x) / 2;
+        const midY = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, midX, midY);
+      }
+
+      ctx.stroke();
+
+      if (points.length > 8) {
+        points.shift();
+      }
+    }
+
+    btnFinish.addEventListener('click', () => {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let paintedPixels = 0;
+
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const r = imgData.data[i];
+        const g = imgData.data[i+1];
+        const b = imgData.data[i+2];
+
+        if (Math.abs(r - 232) > 15 || Math.abs(g - 223) > 15 || Math.abs(b - 209) > 15) {
+          paintedPixels++;
+        }
+      }
+
+      const totalPixels = imgData.data.length / 4;
+      const percentage = (paintedPixels / totalPixels) * 100;
+
+      resultBox.classList.remove('hidden');
+
+      if (percentage < 10) {
+        resultTitle.textContent = "Hasil: Belum Selesai ❌";
+        resultTitle.style.color = "#d32f2f";
+        resultDesc.textContent = "Pilih warna dan warnai tiap blok pulau mosaik Sekar Jagad!";
+      } else if (percentage >= 10 && percentage <= 55) {
+        resultTitle.textContent = "Hasil: Presisi
