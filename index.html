@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LenteraBatik - Batik Sekar Jagad Sidoarjo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #1a1615;
+      color: #f3e9dc;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background-color: #241e1c;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    header h1 {
+      color: #e0a96d;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 12px;
+      color: #a89f91;
+    }
+    .page {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .img-box {
+      width: 100%;
+      height: 220px;
+      background-color: #382e2b;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .img-source {
+      font-size: 10px;
+      color: #a89f91;
+      margin-bottom: 15px;
+      align-self: flex-start;
+      font-style: italic;
+    }
+    .story-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #dcd0c0;
+      margin-bottom: 25px;
+      text-align: justify;
+    }
+
+    /* Controls: Warna & Ukuran */
+    .controls-label {
+      font-size: 11px;
+      color: #e0a96d;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: bold;
+    }
+    .color-palette, .size-palette {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+    .color-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #a89f91;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .color-btn.active {
+      transform: scale(1.2);
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
+    }
+    .size-btn {
+      background-color: #382e2b;
+      color: #f3e9dc;
+      border: 1px solid #a89f91;
+      border-radius: 15px;
+      padding: 5px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .size-btn.active {
+      background-color: #e0a96d;
+      color: #1a1615;
+      font-weight: bold;
+      border-color: #e0a96d;
+    }
+
+    /* Canvas Wrapper */
+    .canvas-wrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 8px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid #e0a96d;
+      background-color: #e8dfd1;
+    }
+    #paintCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Tombol-tombol */
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .btn {
+      background-color: #e0a96d;
+      color: #1a1615;
+      border: none;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .btn:hover {
+      background-color: #cca05b;
+    }
+    .btn-preview {
+      background-color: #3b5998;
+      color: #ffffff;
+      flex: 1;
+    }
+    .btn-preview:hover {
+      background-color: #2d4373;
+    }
+    .btn-reset {
+      background-color: transparent;
+      color: #e0a96d;
+      border: 1px dashed #e0a96d;
+      flex: 1;
+    }
+    .btn-finish {
+      background-color: #2e7d32;
+      color: #ffffff;
+      margin-top: 5px;
+      width: 100%;
+    }
+    .btn-finish:hover {
+      background-color: #1b5e20;
+    }
+    .btn-secondary {
+      background-color: transparent;
+      color: #a89f91;
+      border: 1px solid #a89f91;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    /* Modal Pop-up Contoh Hasil */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 99;
+      border-radius: 12px;
+    }
+    .modal-card {
+      background-color: #241e1c;
+      border: 2px solid #e0a96d;
+      border-radius: 12px;
+      padding: 15px;
+      width: 100%;
+      text-align: center;
+    }
+    .modal-card img {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+
+    .result-box {
+      margin-top: 12px;
+      padding: 12px;
+      background-color: #382e2b;
+      border: 1px solid #e0a96d;
+      border-radius: 10px;
+      width: 100%;
+      text-align: center;
+    }
+    .result-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .result-desc {
+      font-size: 12px;
+      color: #dcd0c0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>LenteraBatik</h1>
+      <p>Kisah & Warisan Batik Sekar Jagad</p>
+    </header>
+
+    <!-- HALAMAN 1: STORYTELLING -->
+    <section id="page-story" class="page">
+      <div class="img-box">
+        <img src="https://raw.githubusercontent.com/redbals359-cyber/Lentera-batik/main/Screenshot_20261006-173951.jpg" alt="Batik Sekar Jagad">
+      </div>
+      <p class="img-source">Sumber Foto: Dokumentasi Digital LenteraBatik</p>
+
+      <div class="story-text">
+        <p><strong>Batik Sekar Jagad</strong> merupakan salah satu motif khas yang paling bergengsi dan sarat akan nilai estetika tinggi. Kata <i>"Sekar"</i> berarti bunga atau keindahan, sedangkan <i>"Jagad"</i> berarti dunia.</p>
+        <br>
+        <p>Motif ini menggambarkan keindahan dan keragaman budaya dunia yang disatukan dalam hamparan pola menyerupai pulau-pulau (kontur peta). Setiap lekukan bagiannya diisi oleh ornamen flora, fauna, dan variasi titik-titik klowongan yang melambangkan keharmonisan serta rasa syukur atas keberagaman alam.</p>
+      </div>
+      <button class="btn" id="btn-to-sim">Coba Mencanting Digital &rarr;</button>
+    </section>
+
+    <!-- HALAMAN 2: SIMULASI MEMBATIK -->
+    <section id="page-sim" class="page hidden">
+      <!-- Pilihan Warna -->
+      <span class="controls-label">1. Pilih Warna Canting:</span>
+      <div class="color-palette">
+        <div class="color-btn active" style="background-color: #517fa4;" data-color="#517fa4" title="Biru Muda"></div>
+        <div class="color-btn" style="background-color: #182a42;" data-color="#182a42" title="Biru Tua"></div>
+        <div class="color-btn" style="background-color: #e8dfd1;" data-color="#e8dfd1" title="Krem / Bunga"></div>
+        <div class="color-btn" style="background-color: #8c6847;" data-color="#8c6847" title="Cokelat Emas"></div>
+        <div class="color-btn" style="background-color: #14171a;" data-color="#14171a" title="Hitam Malam"></div>
+      </div>
+
+      <!-- Pilihan Ukuran Canting -->
+      <span class="controls-label">2. Ukuran Goresan:</span>
+      <div class="size-palette">
+        <button class="size-btn" data-size="6">Kecil (Detail)</button>
+        <button class="size-btn active" data-size="14">Sedang (Rata)</button>
+        <button class="size-btn" data-size="26">Besar (Isi Blok)</button>
+      </div>
+
+      <!-- Canvas Area -->
+      <div class="canvas-wrapper">
+        <canvas id="paintCanvas" width="300" height="300"></canvas>
+      </div>
+
+      <!-- Tombol Aksi Tambahan -->
+      <div class="btn-group">
+        <button class="btn btn-preview" id="btn-open-preview">👁️ Lihat Acuan Batik</button>
+        <button class="btn btn-reset" id="btn-reset">↺ Bersihkan</button>
+      </div>
+
+      <button class="btn btn-finish" id="btn-finish">Selesai Mencanting</button>
+
+      <div id="result-box" class="result-box hidden">
+        <div id="result-title" class="result-title"></div>
+        <div id="result-desc" class="result-desc"></div>
+      </div>
+
+      <button class="btn btn-secondary" id="btn-to-story">&larr; Kembali ke Cerita</button>
+    </section>
+
+    <!-- POP-UP MODAL BUKTI/ACUAN GAMBAR HASIL -->
+    <div id="modal-preview" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h3 style="color: #e0a96d; font-size: 16px;">Acuan Hasil Batik Sekar Jagad</h3>
+        <p style="font-size: 11px; color: #a89f91; margin-top: 2px;">Gunakan susunan pola mosaik warna ini sebagai panduanmu:</p>
+        <img src="https://raw.githubusercontent.com/redbals359-cyber/Lentera-batik/main/Screenshot_20261006-173951.jpg" alt="Acuan Batik Sekar Jagad">
+        <button class="btn" id="btn-close-preview" style="width: 100%; margin-top: 5px;">Tutup & Lanjut Mencanting</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const pageStory = document.getElementById('page-story');
+    const pageSim = document.getElementById('page-sim');
+    const btnToSim = document.getElementById('btn-to-sim');
+    const btnToStory = document.getElementById('btn-to-story');
+    const btnFinish = document.getElementById('btn-finish');
+    const btnReset = document.getElementById('btn-reset');
+    
+    const modalPreview = document.getElementById('modal-preview');
+    const btnOpenPreview = document.getElementById('btn-open-preview');
+    const btnClosePreview = document.getElementById('btn-close-preview');
+
+    const resultBox = document.getElementById('result-box');
+    const resultTitle = document.getElementById('result-title');
+    const resultDesc = document.getElementById('result-desc');
+
+    btnToSim.addEventListener('click', () => {
+      pageStory.classList.add('hidden');
+      pageSim.classList.remove('hidden');
+      resultBox.classList.add('hidden');
+      initCanvas();
+    });
+
+    btnToStory.addEventListener('click', () => {
+      pageSim.classList.add('hidden');
+      pageStory.classList.remove('hidden');
+    });
+
+    // Pop-up Modal Gambar Contoh Hasil
+    btnOpenPreview.addEventListener('click', () => modalPreview.classList.remove('hidden'));
+    btnClosePreview.addEventListener('click', () => modalPreview.classList.add('hidden'));
+
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let selectedColor = '#517fa4';
+    let selectedSize = 14;
+    let points = [];
+
+    // Switch Warna
+    const colorBtns = document.querySelectorAll('.color-btn');
+    colorBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        colorBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedColor = btn.getAttribute('data-color');
+      });
+    });
+
+    // Switch Ukuran Canting
+    const sizeBtns = document.querySelectorAll('.size-btn');
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSize = parseInt(btn.getAttribute('data-size'));
+      });
+    });
+
+    // Pola & Petunjuk Sesuai Foto
+    function drawOutline() {
+      ctx.strokeStyle = '#8c6847';
+      ctx.lineWidth = 2.5;
+
+      // Garis Pulau
+      ctx.beginPath();
+      ctx.moveTo(0, 100);
+      ctx.bezierCurveTo(60, 90, 80, 40, 110, 0);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(110, 0);
+      ctx.bezierCurveTo(150, 70, 210, 50, 300, 90);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, 100);
+      ctx.bezierCurveTo(80, 120, 120, 180, 70, 230);
+      ctx.bezierCurveTo(140, 240, 180, 150, 300, 90);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(70, 230);
+      ctx.bezierCurveTo(120, 270, 150, 260, 180, 300);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(180, 230);
+      ctx.bezierCurveTo(230, 210, 260, 270, 300, 260);
+      ctx.stroke();
+
+      // Ornamen Isen
+      ctx.strokeStyle = '#a89f91';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 3]);
+
+      ctx.beginPath();
+      ctx.arc(60, 260, 12, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(210, 230); ctx.lineTo(260, 290);
+      ctx.moveTo(230, 220); ctx.lineTo(280, 280);
+      ctx.stroke();
+
+      ctx.setLineDash([]);
+
+      // Label Teks Petunjuk
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+
+      ctx.fillStyle = '#1d5480';
+      ctx.fillText('🩵 Biru Muda', 50, 45);
+      ctx.fillText('🩵 Biru Muda', 240, 40);
+
+      ctx.fillStyle = '#0f1d30';
+      ctx.fillText('💙 Biru Tua', 150, 120);
+
+      ctx.fillStyle = '#5c4835';
+      ctx.fillText('🤍 Krem Bunga', 65, 270);
+
+      ctx.fillStyle = '#6e4a27';
+      ctx.fillText('🤎 Cokelat', 240, 250);
+    }
+
+    function initCanvas() {
+      ctx.fillStyle = '#e8dfd1';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawOutline();
+    }
+
+    btnReset.addEventListener('click', initCanvas);
+
+    function getCanvasCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    // ALGORITMA MENCANTING EKSTRA STABIL & HALUS (SMOOTHING PATH)
+    function startDrawing(e) {
+      if (e.cancelable) e.preventDefault();
+      isDrawing = true;
+      const coords = getCanvasCoords(e);
+      points = [coords];
+    }
+
+    function stopDrawing(e) {
+      if (e.cancelable) e.preventDefault();
+      isDrawing = false;
+      points = [];
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      if (e.cancelable) e.preventDefault();
+
+      const coords = getCanvasCoords(e);
+      points.push(coords);
+
+      if (points.length < 2) return;
+
+      ctx.strokeStyle = selectedColor;
+      ctx.lineWidth = selectedSize;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      const p1 = points[0];
+      const p2 = points[1];
+
+      ctx.moveTo(p1.x, p1.y);
+
+      // Interpolasi kurva halus berantai agar goresan tidak tersendat-sendat
+      for (let i = 1; i < points.length - 1; i++) {
+        const midX = (points[i].x + points[i + 1].x) / 2;
+        const midY = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, midX, midY);
+      }
+
+      ctx.stroke();
+
+      // Batasi simpanan titik agar memori ringan & performa stabil
+      if (points.length > 8) {
+        points.shift();
+      }
+    }
+
+    btnFinish.addEventListener('click', () => {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let paintedPixels = 0;
+
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const r = imgData.data[i];
+        const g = imgData.data[i+1];
+        const b = imgData.data[i+2];
+
+        if (Math.abs(r - 232) > 15 || Math.abs(g - 223) > 15 || Math.abs(b - 209) > 15) {
+          paintedPixels++;
+        }
+      }
+
+      const totalPixels = imgData.data.length / 4;
+      const percentage = (paintedPixels / totalPixels) * 100;
+
+      resultBox.classList.remove('hidden');
+
+      if (percentage < 10) {
+        resultTitle.textContent = "Hasil: Belum Selesai ❌";
+        resultTitle.style.color = "#ff5252";
+        resultDesc.textContent = "Pilih warna dan warnai tiap blok pulau mosaik Sekar Jagad!";
+      } else if (percentage >= 10 && percentage <= 55) {
+        resultTitle.textContent = "Hasil: Presisi & Sesuai Mosaik! ✨";
+        resultTitle.style.color = "#4caf50";
+        resultDesc.textContent = "Hebat! Kamu berhasil mewarnai blok-blok pulau Sekar Jagad sesuai variasi warnanya.";
+      } else {
+        resultTitle.textContent = "Hasil: Terlalu Penutup ⚠️";
+        resultTitle.style.color = "#ff9800";
+        resultDesc.textContent = "Goresan warna terlalu penuh sehingga garis mosaik antarpulau jadi tertutup.";
+      }
+    });
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+    canvas.addEventListener('mousemove', draw);
+
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+  </script>
+</body>
+</html>
