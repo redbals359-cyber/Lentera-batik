@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LenteraBatik - Batik Jetis Sidoarjo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #1a1615;
+      color: #f3e9dc;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background-color: #241e1c;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      color: #e0a96d;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 12px;
+      color: #a89f91;
+    }
+    .page {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .img-box {
+      width: 100%;
+      height: 220px;
+      background-color: #382e2b;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .story-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #dcd0c0;
+      margin-bottom: 25px;
+      text-align: justify;
+    }
+    .canvas-wrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 20px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid #e0a96d;
+      background-color: #382e2b;
+    }
+    .bg-batik {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #scratchCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      touch-action: none;
+      cursor: pointer;
+    }
+    .btn {
+      background-color: #e0a96d;
+      color: #1a1615;
+      border: none;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background-color: #cca05b;
+    }
+    .btn-secondary {
+      background-color: transparent;
+      color: #a89f91;
+      border: 1px solid #a89f91;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>LenteraBatik</h1>
+      <p>Kisah & Warisan Batik Jetis Sidoarjo</p>
+    </header>
+
+    <!-- HALAMAN 1: STORYTELLING -->
+    <section id="page-story" class="page">
+      <div class="img-box">
+        <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=600&auto=format&fit=crop" alt="Batik Jetis">
+      </div>
+      <div class="story-text">
+        <p><strong>Kampung Batik Jetis</strong> merupakan pusat kerajinan batik tertua di Sidoarjo yang berdiri sejak abad ke-16. Batik Jetis terkenal dengan ragam motif yang tegas, seperti motif <i>Beras Utah</i> dan <i>Burung Merak</i>, serta warna berani yang sarat akan makna keberanian dan kerja keras masyarakat lokal.</p>
+      </div>
+      <button class="btn" id="btn-to-sim">Coba Mencanting Digital &rarr;</button>
+    </section>
+
+    <!-- HALAMAN 2: SIMULASI MEMBATIK -->
+    <section id="page-sim" class="page hidden">
+      <p style="font-size: 13px; text-align: center; color: #e0a96d;">Usap jarimu di kotak bawah untuk menyingkap motif batik!</p>
+      
+      <div class="canvas-wrapper">
+        <img class="bg-batik" src="https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=600&auto=format&fit=crop" alt="Motif Batik">
+        <canvas id="scratchCanvas" width="300" height="300"></canvas>
+      </div>
+
+      <button class="btn btn-secondary" id="btn-to-story">&larr; Kembali ke Cerita</button>
+    </section>
+  </div>
+
+  <script>
+    const pageStory = document.getElementById('page-story');
+    const pageSim = document.getElementById('page-sim');
+    const btnToSim = document.getElementById('btn-to-sim');
+    const btnToStory = document.getElementById('btn-to-story');
+
+    btnToSim.addEventListener('click', () => {
+      pageStory.classList.add('hidden');
+      pageSim.classList.remove('hidden');
+      initCanvas();
+    });
+
+    btnToStory.addEventListener('click', () => {
+      pageSim.classList.add('hidden');
+      pageStory.classList.remove('hidden');
+    });
+
+    const canvas = document.getElementById('scratchCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    function initCanvas() {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#4a3f35';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.fillStyle = '#e0a96d';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Usap di sini...', canvas.width / 2, canvas.height / 2);
+    }
+
+    function scratch(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 22, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mousemove', scratch);
+
+    canvas.addEventListener('touchstart', (e) => {
+      isDrawing = true;
+      scratch(e);
+    });
+    canvas.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('touchmove', scratch);
+  </script>
+</body>
+</html>
