@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LenteraBatik - Batik Sekar Jagad Sidoarjo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #1a1615;
+      color: #f3e9dc;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background-color: #241e1c;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      color: #e0a96d;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 12px;
+      color: #a89f91;
+    }
+    .page {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .img-box {
+      width: 100%;
+      height: 220px;
+      background-color: #382e2b;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .img-source {
+      font-size: 10px;
+      color: #a89f91;
+      margin-bottom: 15px;
+      align-self: flex-start;
+      font-style: italic;
+    }
+    .story-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #dcd0c0;
+      margin-bottom: 25px;
+      text-align: justify;
+    }
+    .canvas-wrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 10px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid #e0a96d;
+      background-color: #f5f5dc;
+    }
+    #paintCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    /* Palet Warna Batik */
+    .color-palette {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+      align-items: center;
+      justify-content: center;
+    }
+    .color-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid #a89f91;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .color-btn.active {
+      transform: scale(1.2);
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
+    }
+    .btn {
+      background-color: #e0a96d;
+      color: #1a1615;
+      border: none;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background-color: #cca05b;
+    }
+    .btn-finish {
+      background-color: #2e7d32;
+      color: #ffffff;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .btn-finish:hover {
+      background-color: #1b5e20;
+    }
+    .btn-secondary {
+      background-color: transparent;
+      color: #a89f91;
+      border: 1px solid #a89f91;
+      margin-top: 10px;
+    }
+    .btn-reset {
+      background-color: transparent;
+      color: #e0a96d;
+      border: 1px dashed #e0a96d;
+      padding: 6px 12px;
+      font-size: 11px;
+      border-radius: 15px;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+    .result-box {
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #382e2b;
+      border: 1px solid #e0a96d;
+      border-radius: 10px;
+      width: 100%;
+      text-align: center;
+    }
+    .result-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .result-desc {
+      font-size: 12px;
+      color: #dcd0c0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>LenteraBatik</h1>
+      <p>Kisah & Warisan Batik Sekar Jagad</p>
+    </header>
+
+    <!-- HALAMAN 1: STORYTELLING -->
+    <section id="page-story" class="page">
+      <div class="img-box">
+        <img src="https://raw.githubusercontent.com/redbals359-cyber/Lentera-batik/main/Screenshot_20261006-173951.jpg" alt="Batik Sekar Jagad">
+      </div>
+      <p class="img-source">Sumber Foto: Dokumentasi Digital LenteraBatik</p>
+
+      <div class="story-text">
+        <p><strong>Batik Sekar Jagad</strong> merupakan salah satu motif khas yang paling bergengsi dan sarat akan nilai estetika tinggi. Kata <i>"Sekar"</i> berarti bunga atau keindahan, sedangkan <i>"Jagad"</i> berarti dunia.</p>
+        <br>
+        <p>Motif ini menggambarkan keindahan dan keragaman budaya dunia yang disatukan dalam hamparan pola menyerupai pulau-pulau (kontur peta). Setiap lekukan bagiannya diisi oleh ornamen flora, fauna, dan variasi titik-titik klowongan yang melambangkan keharmonisan serta rasa syukur atas keberagaman alam.</p>
+      </div>
+      <button class="btn" id="btn-to-sim">Coba Mencanting Digital &rarr;</button>
+    </section>
+
+    <!-- HALAMAN 2: SIMULASI MEMBATIK -->
+    <section id="page-sim" class="page hidden">
+      <p style="font-size: 13px; text-align: center; color: #e0a96d; font-weight: bold;">
+        Pilih warna khas Sekar Jagad, lalu cantingkan ke dalam pola!
+      </p>
+
+      <!-- Pilihan Palet Warna Khas Sekar Jagad -->
+      <div class="color-palette">
+        <div class="color-btn active" style="background-color: #8C5A2B;" data-color="#8C5A2B" title="Cokelat Sogan"></div>
+        <div class="color-btn" style="background-color: #DAA520;" data-color="#DAA520" title="Kuning Emas"></div>
+        <div class="color-btn" style="background-color: #800000;" data-color="#800000" title="Merah Marun"></div>
+        <div class="color-btn" style="background-color: #1A1615;" data-color="#1A1615" title="Hitam Malam"></div>
+        <div class="color-btn" style="background-color: #F5F5DC;" data-color="#F5F5DC" title="Putih Tulang"></div>
+      </div>
+
+      <div class="canvas-wrapper">
+        <canvas id="paintCanvas" width="300" height="300"></canvas>
+      </div>
+
+      <button class="btn-reset" id="btn-reset">↺ Bersihkan Kain</button>
+      <button class="btn btn-finish" id="btn-finish">Selesai Mencanting</button>
+
+      <div id="result-box" class="result-box hidden">
+        <div id="result-title" class="result-title"></div>
+        <div id="result-desc" class="result-desc"></div>
+      </div>
+
+      <button class="btn btn-secondary" id="btn-to-story">&larr; Kembali ke Cerita</button>
+    </section>
+  </div>
+
+  <script>
+    const pageStory = document.getElementById('page-story');
+    const pageSim = document.getElementById('page-sim');
+    const btnToSim = document.getElementById('btn-to-sim');
+    const btnToStory = document.getElementById('btn-to-story');
+    const btnFinish = document.getElementById('btn-finish');
+    const btnReset = document.getElementById('btn-reset');
+    
+    const resultBox = document.getElementById('result-box');
+    const resultTitle = document.getElementById('result-title');
+    const resultDesc = document.getElementById('result-desc');
+
+    btnToSim.addEventListener('click', () => {
+      pageStory.classList.add('hidden');
+      pageSim.classList.remove('hidden');
+      resultBox.classList.add('hidden');
+      initCanvas();
+    });
+
+    btnToStory.addEventListener('click', () => {
+      pageSim.classList.add('hidden');
+      pageStory.classList.remove('hidden');
+    });
+
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let selectedColor = '#8C5A2B';
+    let lastX = 0;
+    let lastY = 0;
+
+    // Pemilihan Warna
+    const colorBtns = document.querySelectorAll('.color-btn');
+    colorBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        colorBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedColor = btn.getAttribute('data-color');
+      });
+    });
+
+    function drawOutline() {
+      ctx.strokeStyle = '#4A3B32';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+
+      // Outlines Kontur Pulau Sekar Jagad
+      ctx.beginPath();
+      ctx.moveTo(30, 50);
+      ctx.bezierCurveTo(80, 20, 130, 80, 160, 40);
+      ctx.bezierCurveTo(210, 10, 270, 70, 260, 130);
+      ctx.bezierCurveTo(280, 200, 200, 260, 160, 220);
+      ctx.bezierCurveTo(120, 270, 50, 250, 30, 190);
+      ctx.bezierCurveTo(10, 130, 20, 80, 30, 50);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(160, 40);
+      ctx.lineTo(160, 220);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(30, 190);
+      ctx.lineTo(260, 130);
+      ctx.stroke();
+
+      // Isen-isen Bunga & Titik
+      const centers = [{x: 90, y: 110}, {x: 210, y: 85}, {x: 95, y: 200}, {x: 205, y: 185}];
+      centers.forEach(pt => {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 14, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      ctx.setLineDash([]);
+    }
+
+    function initCanvas() {
+      // Background Kain Mori
+      ctx.fillStyle = '#F5F5DC';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawOutline();
+    }
+
+    btnReset.addEventListener('click', initCanvas);
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      lastX = clientX - rect.left;
+      lastY = clientY - rect.top;
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const currentX = clientX - rect.left;
+      const currentY = clientY - rect.top;
+
+      ctx.strokeStyle = selectedColor;
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(currentX, currentY);
+      ctx.stroke();
+
+      lastX = currentX;
+      lastY = currentY;
+    }
+
+    // Penilaian Kerapian & Komposisi Warna
+    btnFinish.addEventListener('click', () => {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let paintedPixels = 0;
+
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const r = imgData.data[i];
+        const g = imgData.data[i+1];
+        const b = imgData.data[i+2];
+
+        // Hitung piksel yang warnanya sudah diubah dari warna latar kain mori (#F5F5DC / r:245, g:245, b:220)
+        if (Math.abs(r - 245) > 15 || Math.abs(g - 245) > 15 || Math.abs(b - 220) > 15) {
+          paintedPixels++;
+        }
+      }
+
+      const totalPixels = imgData.data.length / 4;
+      const percentage = (paintedPixels / totalPixels) * 100;
+
+      resultBox.classList.remove('hidden');
+
+      if (percentage < 8) {
+        resultTitle.textContent = "Hasil: Belum Selesai ❌";
+        resultTitle.style.color = "#ff5252";
+        resultDesc.textContent = "Kain batikmu masih sangat polos. Gunakan palet warna untuk mengoleskan canting pada pola!";
+      } else if (percentage >= 8 && percentage <= 45) {
+        resultTitle.textContent = "Hasil: Indah & Autentik! ✨";
+        resultTitle.style.color = "#4caf50";
+        resultDesc.textContent = "Komposisi warna Sekar Jagad buatanmu sangat serasi dan rapi memenuhi bidang pola.";
+      } else {
+        resultTitle.textContent = "Hasil: Terlalu Penutup / Penuh ⚠️";
+        resultTitle.style.color = "#ff9800";
+        resultDesc.textContent = "Warna canting terlalu tebal dan menutupi hampir seluruh kain, sehingga detail pola pulau Sekar Jagad tidak terlihat lagi.";
+      }
+    });
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mousemove', draw);
+
+    canvas.addEventListener('touchstart', (e) => {
+      startDrawing(e);
+      draw(e);
+    });
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchmove', draw);
+  </script>
+</body>
+</html>
